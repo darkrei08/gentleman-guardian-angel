@@ -357,7 +357,7 @@ execute_codex() {
   fi
 
   # Silence Codex event stream and emit only the final message file content.
-  printf '%s' "$prompt" | codex exec --output-last-message "$output_file" - >/dev/null 2>&1
+  printf '%s' "$prompt" | codex exec -c model_reasoning_effort=xhigh --output-last-message "$output_file" - >/dev/null 2>&1
   local codex_status=${PIPESTATUS[1]}
 
   if [[ -f "$output_file" && -s "$output_file" ]]; then
@@ -1233,7 +1233,7 @@ execute_provider_with_timeout() {
           fi
           # shellcheck disable=SC2016
           execute_with_timeout "$timeout" "Codex" \
-            bash -c 'exec codex exec --output-last-message "$2" - < "$1" >/dev/null 2>&1' _ "$prompt_file" "$codex_output_file"
+            bash -c 'exec codex exec -c model_reasoning_effort=xhigh --output-last-message "$2" - < "$1" >/dev/null 2>&1' _ "$prompt_file" "$codex_output_file"
           result=$?
           if [[ $result -ne 124 && -f "$codex_output_file" && -s "$codex_output_file" ]]; then
             cat "$codex_output_file"
